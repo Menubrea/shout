@@ -14,7 +14,7 @@ const SinglePost = ({ ...props }: PostProps) => {
   const { text, author, comments, authorId, createdAt } = post;
   const { name, image } = author;
 
-  let placeholder = "";
+  let placeholder = "Log in to comment";
   if (userId && name) placeholder = `Comment on ${name}'s post`;
 
   const { deletePost, deletePostLoading } = deletePostApi();
@@ -111,11 +111,11 @@ const SinglePost = ({ ...props }: PostProps) => {
             minLength={1}
             maxLength={255}
             required
-            disabled={userId === authorId}
+            disabled={userId === authorId || !userId}
             placeholder={placeholder}
           ></input>
           <button
-            disabled={userId === authorId}
+            disabled={userId === authorId || !userId}
             type="submit"
             className={`btn-ghost btn-sm btn ${"btn-neutral"}`}
           >

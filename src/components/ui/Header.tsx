@@ -50,9 +50,11 @@ function Auth() {
         </Link>
         <div className="divider my-0" />
 
-        <Link href={"/chat"} className="btn-ghost  btn-square btn">
-          <BsFillPlusCircleFill className="h-6 w-6" />
-        </Link>
+        {sessionData && (
+          <Link href={"/chat"} className="btn-ghost  btn-square btn">
+            <BsFillPlusCircleFill className="h-6 w-6" />
+          </Link>
+        )}
         <div className="divider my-0" />
         <div>
           {chat?.map((c) => (
