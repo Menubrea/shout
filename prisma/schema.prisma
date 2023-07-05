@@ -55,9 +55,27 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    banner        String?
+    bio           String?
+    chatOwner     Chat[]   @relation("ChatOwner")
+    chat          Chat[]
+    messages      Message[]
+    WallPost      WallPost[]
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    comments      Comment[]
+    following     User[]    @relation("UserFollows")
+    followers     User[]    @relation("UserFollows")
+}
+
+model WallPost {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    image String?
+    text String
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
 }
 
 model VerificationToken {
@@ -74,4 +92,37 @@ model Post {
     text String
     author User @relation(fields: [authorId], references: [id])
     authorId String
+    comments Comment[]
+    likes Int @default(0)
+}
+
+model Comment {
+    id String @id @default(cuid())
+    createdAt DateTime @default(now())
+    comment String
+    author User @relation(fields: [authorId], references: [id])
+    post Post @relation(fields: [postId], references: [id])
+    authorId String
+    postId String
+}
+
+model Chat {
+    id String @id @default(uuid()) @unique
+    createdAt DateTime @default(now())
+    owner User @relation(name: "ChatOwner", fields: [ownerId], references: [id])
+    image String?
+    name String @unique
+    ownerId String
+    users User[]
+    messages Message[]
+}
+
+model Message {
+    id String @id @default(uuid()) @unique
+    createdAt DateTime @default(now())
+    text String
+    user User @relation(fields: [authorId], references: [id])
+    chat Chat @relation(fields: [chatId], references: [id])
+    authorId String
+    chatId String
 }
