@@ -6,10 +6,19 @@ import {
 } from "@/server/api/trpc";
 
 export const postsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.post.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.post.findMany({
       include: {
         author: true,
+        comments: {
+          include: {
+            author: true,
+            post: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -24,8 +33,8 @@ export const postsRouter = createTRPCRouter({
         authorId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.create({
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.post.create({
         data: {
           text: input.text,
           author: {
@@ -39,8 +48,14 @@ export const postsRouter = createTRPCRouter({
 
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.post.delete({
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.comment.deleteMany({
+        where: {
+          post: { id: input.id },
+        },
+      });
+
+      return await ctx.prisma.post.delete({
         where: {
           id: input.id,
         },
