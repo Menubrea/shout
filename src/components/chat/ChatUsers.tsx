@@ -23,7 +23,7 @@ const UserContainer = ({ ...props }: UserContainerProps) => {
           alt={`${chat?.name} Avatar`}
           src={chat?.image || ""}
         />
-        <h1 className="absolute w-full bg-base-300 bg-opacity-30 text-center backdrop-blur-md">
+        <h1 className="absolute top-0 w-full bg-base-200 bg-opacity-80 text-center backdrop-blur-md">
           {chat?.name || "Chat"}
         </h1>
       </div>

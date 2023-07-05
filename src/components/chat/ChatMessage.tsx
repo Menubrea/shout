@@ -8,12 +8,13 @@ interface MessageProps extends Message {
 }
 
 const ChatMessage = ({ ...props }: MessageProps) => {
-  const { user, text, createdAt } = props;
+  const { user, text, createdAt, authorId } = props;
   const { data: sessionData } = useSession();
   const userId = sessionData ? sessionData.user.id : "";
+  const yourMessage = userId === authorId;
 
   return (
-    <div className={`chat ${userId ? "chat-start" : "chat-end"}`}>
+    <div className={`chat ${yourMessage ? "chat-start" : "chat-end"}`}>
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
           <Image
